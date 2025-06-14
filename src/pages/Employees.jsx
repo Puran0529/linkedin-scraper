@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { faker } from "@faker-js/faker";
@@ -7,10 +7,10 @@ const MIN_EMPLOYEE_COUNT = 10;
 
 function generateFakeEmployee() {
   return {
-    firstName: faker.name.firstName(),
-    lastName: faker.name.lastName(),
-    position: faker.name.jobTitle(),
-    linkedinUrl: `https://linkedin.com/in/${faker.internet.userName()}`,
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
+    position: faker.person.jobTitle(),
+    linkedinUrl: `https://linkedin.com/in/${faker.internet.username()}`,
     email: faker.internet.email(),
   };
 }
@@ -31,7 +31,10 @@ const Employees = () => {
     const fetchEmployees = async () => {
       try {
         setLoading(true);
-        const res = await axios.post("http://localhost:5000/api/scrape", { companyDomain });
+        const res = await axios.post(
+          "https://linkedin-scraper-backend-0e95.onrender.com/api/scrape",
+          { companyDomain }
+        );
         let realEmployees = res.data || [];
 
         if (realEmployees.length < MIN_EMPLOYEE_COUNT) {
@@ -44,7 +47,7 @@ const Employees = () => {
         }
 
         setEmployees(realEmployees);
-      } catch (err) {
+      } catch {
         alert("Failed to fetch employees");
       } finally {
         setLoading(false);
